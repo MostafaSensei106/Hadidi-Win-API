@@ -16,22 +16,22 @@ func NewUserUsecase(userRepo domain.UserRepository) domain.UserUsecase {
 	}
 }
 
-// CreateUser implements [domain.UserUsecase].
-func (u *userUsecase) CreateUser(ctx context.Context, user domain.User) (*domain.User, error) {
-	panic("unimplemented")
+func (u *userUsecase) GetUsers(ctx context.Context) ([]*domain.User, error) {
+	return u.userRepo.GetAll(ctx)
 }
 
-// DeleteUser implements [domain.UserUsecase].
+func (u *userUsecase) CreateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
+	return u.userRepo.Create(ctx, user)
+}
+
 func (u *userUsecase) DeleteUser(ctx context.Context, id string) error {
-	panic("unimplemented")
+	return u.userRepo.Delete(ctx, id)
 }
 
-// GetUser implements [domain.UserUsecase].
 func (u *userUsecase) GetUser(ctx context.Context, id string) (*domain.User, error) {
-	panic("unimplemented")
+	return u.userRepo.Get(ctx, id)
 }
 
-// UpdateUser implements [domain.UserUsecase].
-func (u *userUsecase) UpdateUser(ctx context.Context, user domain.User) (*domain.User, error) {
-	panic("unimplemented")
+func (u *userUsecase) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
+	return u.userRepo.Update(ctx, user)
 }

@@ -16,34 +16,26 @@ func NewProductUsecase(productRepo domain.ProductRepository) domain.ProductUseca
 	}
 }
 
-// CreateProduct implements [domain.ProductUsecase].
-func (u *productUsecase) CreateProduct(ctx context.Context, product *domain.Product) (*domain.Product, error) {
-	u.productRepo.Create(ctx, product)
-	return product, nil
-}
-
-// DeleteProduct implements [domain.ProductUsecase].
-func (u *productUsecase) DeleteProduct(ctx context.Context, id string) error {
-	u.productRepo.Delete(ctx, id)
-	return nil
-}
-
-// GetProduct implements [domain.ProductUsecase].
 func (u *productUsecase) GetProduct(ctx context.Context, id string) (*domain.Product, error) {
-	return u.productRepo.GetByID(ctx, id)
+	return u.productRepo.Get(ctx, id)
 }
 
-// GetProducts implements [domain.ProductUsecase].
 func (u *productUsecase) GetProducts(ctx context.Context) ([]*domain.Product, error) {
 	return u.productRepo.GetAll(ctx)
 }
 
-// SearchProducts implements [domain.ProductUsecase].
-func (u *productUsecase) SearchProducts(ctx context.Context, query string) ([]*domain.Product, error) {
-	return u.productRepo.Search(ctx, query)
+func (u *productUsecase) CreateProduct(ctx context.Context, product *domain.Product) (*domain.Product, error) {
+	return u.productRepo.Create(ctx, product)
 }
 
-// UpdatePrpdut implements [domain.ProductUsecase].
 func (u *productUsecase) UpdateProduct(ctx context.Context, product *domain.Product) (*domain.Product, error) {
 	return u.productRepo.Update(ctx, product)
+}
+
+func (u *productUsecase) DeleteProduct(ctx context.Context, id string) error {
+	return u.productRepo.Delete(ctx, id)
+}
+
+func (u *productUsecase) SearchProducts(ctx context.Context, query string) ([]*domain.Product, error) {
+	return u.productRepo.Search(ctx, query)
 }

@@ -4,48 +4,43 @@ import (
 	"context"
 
 	"github.com/MostafaSensei106/Hadidi-Win-API/internal/domain"
-	"github.com/jackc/pgx/v5"
-	"github.com/redis/go-redis/v9"
+	"gorm.io/gorm"
 )
 
 type productRepository struct {
-	db    *db.query
-	redis *redis.Client
+	BaseRepository[domain.Product]
 }
 
-func NewProductRepository(db *pgx.Conn, redis *redis.Client) domain.ProductRepository {
+func NewProductRepository(db *gorm.DB) domain.ProductRepository {
 	return &productRepository{
-		db:    db,
-		redis: redis,
+		BaseRepository: NewBaseRepository[domain.Product](db),
 	}
 }
 
-// Create implements [domain.ProductRepository].
-func (p *productRepository) Create(ctx context.Context, product *domain.Product) (*domain.Product, error) {
-	panic("unimplemented")
+func (r *productRepository) Get(ctx context.Context, id string) (*domain.Product, error) {
+	return r.BaseRepository.Get(ctx, id)
 }
 
-// Delete implements [domain.ProductRepository].
-func (p *productRepository) Delete(ctx context.Context, id string) error {
-	panic("unimplemented")
+func (r *productRepository) GetAll(ctx context.Context) ([]*domain.Product, error) {
+	return r.BaseRepository.GetAll(ctx)
 }
 
-// GetAll implements [domain.ProductRepository].
-func (p *productRepository) GetAll(ctx context.Context) ([]*domain.Product, error) {
-	panic("unimplemented")
+func (r *productRepository) Create(ctx context.Context, product *domain.Product) (*domain.Product, error) {
+	return r.BaseRepository.Create(ctx, product)
 }
 
-// GetByID implements [domain.ProductRepository].
-func (p *productRepository) GetByID(ctx context.Context, id string) (*domain.Product, error) {
-	panic("unimplemented")
+func (r *productRepository) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
+	return r.BaseRepository.Update(ctx, product)
 }
 
-// Search implements [domain.ProductRepository].
-func (p *productRepository) Search(ctx context.Context, query string) ([]*domain.Product, error) {
-	panic("unimplemented")
+func (r *productRepository) Delete(ctx context.Context, id string) error {
+	return r.BaseRepository.Delete(ctx, id)
 }
 
-// Update implements [domain.ProductRepository].
-func (p *productRepository) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
-	panic("unimplemented")
+func (r *productRepository) Search(ctx context.Context, query string) ([]*domain.Product, error) {
+	var products []*domain.Product
+	if err := r.GetDB().WithContext(ctx).Where("name ILIKE ? OR desc ILIKE ?", "%"+query+"%", "%"+query+"%").Find(&products).Error; err != nil {
+		return nil, err
+	}
+	return products, nil
 }
